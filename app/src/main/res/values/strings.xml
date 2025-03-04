@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">CalculatorApp</string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="A">A</string>
+    <string name="B">B</string>
+    <string name="C">C</string>
+    <string name="D">D</string>
+    <string name="E">E</string>
+    <string name="F">F</string>
+
+    <string name="topAppBar_calculator">Калькулятор</string>
+    <string name="history">История</string>
+    <string name="info">Справка</string>
+
+    <string name="current_base">Текущая СС: %s</string>
+    <string name="new_base">Новая СС: %s</string>
+    <string name="enter_number">Введите число</string>
+</resources>
