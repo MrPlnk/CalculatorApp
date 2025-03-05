@@ -20,6 +20,7 @@
     <string name="topAppBar_calculator">Калькулятор</string>
     <string name="history">История</string>
     <string name="info">Справка</string>
+    <string name="backspace">Стереть</string>
 
     <string name="current_base">Текущая СС: %s</string>
     <string name="new_base">Новая СС: %s</string>
