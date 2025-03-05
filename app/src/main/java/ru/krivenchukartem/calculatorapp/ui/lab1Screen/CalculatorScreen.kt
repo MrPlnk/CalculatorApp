@@ -1,7 +1,5 @@
 package ru.krivenchukartem.calculatorapp.ui.lab1Screen
 
-import android.content.Context
-import android.transition.Slide
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,28 +10,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +31,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,12 +41,12 @@ import ru.krivenchukartem.calculatorapp.data.CalcUiState
 fun CalculatorScreen(
     calcUiState: CalcUiState,
     modifier: Modifier = Modifier,
-    onChangeBaseSlider: (Float) -> Unit = {value: Float ->},
-    onChangeNewSlider: (Float) -> Unit = {value: Float ->},
-    onTextFieldValueChanged: (String) -> Unit = {value: String ->},
-    onDigitButtonClicked: (String) -> Unit = {value: String ->},
+    onChangeBaseSlider: (Float) -> Unit = { },
+    onChangeNewSlider: (Float) -> Unit = { },
+    onTextFieldValueChanged: (String) -> Unit = { },
+    onDigitButtonClicked: (String) -> Unit = { },
     onBackSpaceButtonClicked: () -> Unit = {},
-    onDotButtonClicked: (String) -> Unit = {value: String ->},
+    onDotButtonClicked: (String) -> Unit = { },
     onClearButtonClicked: () -> Unit = {},
 ){
     val context = LocalContext.current
@@ -86,7 +74,10 @@ fun CalculatorScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(){
+        Column(
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+        ){
+            /*TODO: сделать проверку в слайдере число или нет*/
             Column{
                 Text(stringResource(R.string.current_base, calcUiState.currentBase))
                 Slider(
@@ -107,7 +98,9 @@ fun CalculatorScreen(
             }
         }
 
-        Column {
+        Column(
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -146,17 +139,34 @@ fun CalculatorScreen(
             }
         }
 
-        Column{
-            Row(horizontalArrangement = Arrangement.SpaceBetween){
+        Column(
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+        ){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
+                Row {
+                    IconButton(
+                        onClick = {},
+
+                        ) {
+                        Icon(
+                            Icons.Filled.Menu,
+                            contentDescription = stringResource(R.string.history)
+                        )
+                    }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            Icons.Filled.Info,
+                            contentDescription = stringResource(R.string.backspace)
+                        )
+                    }
+                }
                 IconButton(
                     onClick = {},
-
-                ) { Icon(
-                    Icons.Filled.Menu,
-                    contentDescription = stringResource(R.string.history)
-                ) }
-                IconButton(
-                    onClick = {}
                 ){ Icon(
                     Icons.AutoMirrored.Default.KeyboardArrowLeft,
                     contentDescription = stringResource(R.string.backspace)
@@ -167,13 +177,16 @@ fun CalculatorScreen(
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_medium))
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(DIGITS_PER_ROW),
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+                modifier = Modifier.size(1000.dp, 300.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp), // Равные отступы между элементами
+                verticalArrangement = Arrangement.Center // Равные отступы между строками
             ) {
                 items(digits) { item ->
                     FormatedButton(
@@ -202,6 +215,11 @@ fun CalculatorScreen(
     }
 }
 
+
+@Composable
+fun HistoryInfoDeletePanel(){
+
+}
 
 @Composable
 fun FormatedButton(
