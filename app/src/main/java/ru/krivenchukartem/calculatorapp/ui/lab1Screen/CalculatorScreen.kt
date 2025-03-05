@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,18 +14,31 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -132,29 +146,55 @@ fun CalculatorScreen(
             }
         }
 
+        Column{
+            Row(horizontalArrangement = Arrangement.SpaceBetween){
+                IconButton(
+                    onClick = {},
 
-        Row {
+                ) { Icon(
+                    Icons.Filled.Menu,
+                    contentDescription = stringResource(R.string.history)
+                ) }
+                IconButton(
+                    onClick = {}
+                ){ Icon(
+                    Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                    contentDescription = stringResource(R.string.backspace)
+                ) }
+            }
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(),
+                thickness = dimensionResource(R.dimen.thick_devider)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(DIGITS_PER_ROW),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
             ) {
-                items(digits){ item ->
+                items(digits) { item ->
                     FormatedButton(
                         text = stringResource(item),
-                        onClick = { onDigitButtonClicked(context.getString(item))},
-                        contentPadding = PaddingValues(0.dp),
+                        onClick = { onDigitButtonClicked(context.getString(item)) },
+                        contentPadding = PaddingValues(8.dp), // Добавляем внутренние отступы
+                        shape = CircleShape,
                         modifier = Modifier
-                            .padding(end = dimensionResource(R.dimen.padding_small))
-                            .size(width = 10.dp, height = 10.dp)
+                            .size(56.dp) // Увеличиваем размер кнопки
+                            .aspectRatio(1f) // Держим пропорции круга
                     )
                 }
-                item{
+                item {
                     FormatedButton(
                         text = stringResource(R.string.enter_number),
                         onClick = {},
-                        contentPadding = PaddingValues(0.dp),
+                        contentPadding = PaddingValues(8.dp),
+                        shape = CircleShape,
                         modifier = Modifier
-                            .size(width = 10.dp, height = 10.dp)
+                            .size(56.dp)
+                            .aspectRatio(1f)
                     )
                 }
             }
@@ -168,14 +208,21 @@ fun FormatedButton(
     text: String,
     onClick: () -> Unit,
     contentPadding: PaddingValues,
+    shape: Shape,
     modifier: Modifier = Modifier,
-){
+) {
     Button(
         modifier = modifier,
         onClick = onClick,
-        contentPadding = contentPadding
-    ){
-        Text(text)
+        contentPadding = contentPadding,
+        shape = shape, // Используем переданную форму
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Blue, // Цвет кнопки
+            contentColor = Color.White // Цвет текста
+        ),
+        elevation = ButtonDefaults.buttonElevation(8.dp) // Добавляем тень
+    ) {
+        Text(text, fontSize = 18.sp)
     }
 }
 
