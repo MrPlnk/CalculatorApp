@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -20,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ru.krivenchukartem.calculatorapp.ui.CalcViewModel
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.CalculatorScreen
+import ru.krivenchukartem.calculatorapp.ui.lab1Screen.HistoryScreen
 
 enum class MainScreen {
     Start,
@@ -45,7 +47,39 @@ fun CalculatorApp(
             composable(route = MainScreen.Start.name){
                 CalculatorScreen(
                     calcUiState = uiState,
+                    onChangeCurrentSlider = {
+                        newValue: Float ->
+                        val value = newValue.toInt().toString()
+                        viewModel.updateCurrentSlider(value)
+                    },
+                    onChangeNewSlider = {
+                        newValue: Float ->
+                        val value = newValue.toInt().toString()
+                        viewModel.updateNewSlider(value)
+                    },
+                    onDigitButtonClicked = {
+                        newValue ->
+                        viewModel.updateExpressionBar(newValue)
+                   },
+                    onClearButtonClicked = {viewModel.clearExpressionBar()},
+                    onBackSpaceButtonClicked = {viewModel.backSpace()},
+                    onEqualButtonClicked = {viewModel.updateHistory()},
+                    onInfoButtonClicked = {
+                        navController.navigate(MainScreen.Info.name)
+                    },
+                    onHistoryButtonClicked = {
+                        navController.navigate(MainScreen.History.name)
+                    },
                     modifier = Modifier.fillMaxSize()
+                )
+            }
+            composable(route = MainScreen.History.name){
+                HistoryScreen(
+                    historyItems = uiState.history,
+                    onHistoryClearButtonClicked = {viewModel.clearHistory()},
+                    modifier = Modifier
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .fillMaxSize()
                 )
             }
         }

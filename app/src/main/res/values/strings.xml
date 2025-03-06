@@ -17,6 +17,10 @@
     <string name="E">E</string>
     <string name="F">F</string>
 
+    <string name="equal">=</string>
+    <string name="dot">.</string>
+    <string name="clear">C</string>
+
     <string name="topAppBar_calculator">Калькулятор</string>
     <string name="history">История</string>
     <string name="info">Справка</string>
@@ -25,4 +29,6 @@
     <string name="current_base">Текущая СС: %s</string>
     <string name="new_base">Новая СС: %s</string>
     <string name="enter_number">Введите число</string>
+
+    <string name="clear_history">Отчистить историю</string>
 </resources>

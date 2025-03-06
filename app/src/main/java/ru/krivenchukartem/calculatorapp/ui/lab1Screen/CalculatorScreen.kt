@@ -41,13 +41,14 @@ import ru.krivenchukartem.calculatorapp.data.CalcUiState
 fun CalculatorScreen(
     calcUiState: CalcUiState,
     modifier: Modifier = Modifier,
-    onChangeBaseSlider: (Float) -> Unit = { },
+    onChangeCurrentSlider: (Float) -> Unit = { },
     onChangeNewSlider: (Float) -> Unit = { },
-    onTextFieldValueChanged: (String) -> Unit = { },
     onDigitButtonClicked: (String) -> Unit = { },
     onBackSpaceButtonClicked: () -> Unit = {},
-    onDotButtonClicked: (String) -> Unit = { },
     onClearButtonClicked: () -> Unit = {},
+    onEqualButtonClicked: () -> Unit = {},
+    onHistoryButtonClicked: () -> Unit = {},
+    onInfoButtonClicked: () -> Unit = {}
 ){
     val context = LocalContext.current
     val DIGITS_PER_ROW = 4
@@ -77,20 +78,19 @@ fun CalculatorScreen(
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ){
-            /*TODO: сделать проверку в слайдере число или нет*/
             Column{
-                Text(stringResource(R.string.current_base, calcUiState.currentBase))
+                Text(stringResource(R.string.current_base, calcUiState.currentBase.toIntOrNull() ?: 2))
                 Slider(
-                    value = calcUiState.currentBase.toFloat(),
-                    onValueChange = onChangeBaseSlider,
+                    value = calcUiState.currentBase.toFloatOrNull() ?: 2f,
+                    onValueChange = onChangeCurrentSlider,
                     valueRange = 2f..16f,
-                    steps = 14,
+                    steps = 13,
                 )
             }
             Column{
-                Text(stringResource(R.string.new_base, calcUiState.newBase))
+                Text(stringResource(R.string.new_base, calcUiState.newBase.toIntOrNull() ?: 2))
                 Slider(
-                    value = calcUiState.newBase.toFloat(),
+                    value = calcUiState.newBase.toFloatOrNull() ?: 2f,
                     onValueChange = onChangeNewSlider,
                     valueRange = 2f..16f,
                     steps = 14,
@@ -108,6 +108,7 @@ fun CalculatorScreen(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
+                    /*TODO: сделать более элегантную проверку на тип числа (int, float)*/
                     text = calcUiState.currentNumber,
                     fontSize = dimensionResource(R.dimen.fontSize_medium).value.sp
                 )
@@ -117,7 +118,7 @@ fun CalculatorScreen(
                     modifier = Modifier.align(Alignment.Bottom)
                 )
                 Text(
-                    text = "=",
+                    text = stringResource(R.string.equal),
                     fontSize = dimensionResource(R.dimen.fontSize_medium).value.sp
                 )
             }
@@ -148,7 +149,7 @@ fun CalculatorScreen(
             ){
                 Row {
                     IconButton(
-                        onClick = {},
+                        onClick = onHistoryButtonClicked,
 
                         ) {
                         Icon(
@@ -157,7 +158,7 @@ fun CalculatorScreen(
                         )
                     }
                     IconButton(
-                        onClick = {}
+                        onClick = onInfoButtonClicked
                     ) {
                         Icon(
                             Icons.Filled.Info,
@@ -166,7 +167,7 @@ fun CalculatorScreen(
                     }
                 }
                 IconButton(
-                    onClick = {},
+                    onClick = onBackSpaceButtonClicked,
                 ){ Icon(
                     Icons.AutoMirrored.Default.KeyboardArrowLeft,
                     contentDescription = stringResource(R.string.backspace)
@@ -175,13 +176,7 @@ fun CalculatorScreen(
             HorizontalDivider(modifier = Modifier.fillMaxWidth(),
                 thickness = dimensionResource(R.dimen.thick_devider)
             )
-        }
-        Row(
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_medium))
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
+
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(DIGITS_PER_ROW),
                 modifier = Modifier.size(1000.dp, 300.dp),
@@ -201,8 +196,8 @@ fun CalculatorScreen(
                 }
                 item {
                     FormatedButton(
-                        text = stringResource(R.string.enter_number),
-                        onClick = {},
+                        text = stringResource(R.string.equal),
+                        onClick = onEqualButtonClicked,
                         contentPadding = PaddingValues(8.dp),
                         shape = CircleShape,
                         modifier = Modifier
@@ -210,15 +205,32 @@ fun CalculatorScreen(
                             .aspectRatio(1f)
                     )
                 }
+                item {
+                    FormatedButton(
+                        text = stringResource(R.string.dot),
+                        onClick = {onDigitButtonClicked(context.getString(R.string.dot))},
+                        contentPadding = PaddingValues(8.dp),
+                        shape = CircleShape,
+                        modifier = Modifier
+                            .size(56.dp)
+                            .aspectRatio(1f)
+                    )
+                }
+                item {
+                    FormatedButton(
+                        text = stringResource(R.string.clear),
+                        onClick = onClearButtonClicked,
+                        contentPadding = PaddingValues(8.dp),
+                        shape = CircleShape,
+                        modifier = Modifier
+                            .size(56.dp)
+                            .aspectRatio(1f)
+                    )
+                }
+
             }
         }
     }
-}
-
-
-@Composable
-fun HistoryInfoDeletePanel(){
-
 }
 
 @Composable
