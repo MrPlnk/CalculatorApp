@@ -34,7 +34,25 @@ class CalcViewModel : ViewModel() {
     }
 
     fun updateExpressionBar(newValue: String){
-        /*TODO: Сделать проверку на точку в стиле R.string.dot*/
+        /*TODO: Исправить преобразование в большую СС*/
+        val codeValue: Int
+        val offset: Int
+        val newBase: Int
+        if (newValue in "A".."F"){
+            codeValue = newValue[0].code - "7"[0].code
+            offset = "7"[0].code
+        }
+        else{
+            codeValue = newValue[0].code - "0"[0].code
+            offset = "0"[0].code
+        }
+        val currentBase = _uiState.value.currentBase.toInt()
+
+        newBase = codeValue + offset + 1
+        if (codeValue >= currentBase){
+            updateCurrentSlider(newBase.toChar().toString())
+        }
+
         if (newValue == "."){
             if (!_uiState.value.isFloat){
                 _uiState.update { currentState ->

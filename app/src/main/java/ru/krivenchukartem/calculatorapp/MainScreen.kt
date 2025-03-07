@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import ru.krivenchukartem.calculatorapp.ui.CalcViewModel
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.CalculatorScreen
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.HistoryScreen
+import ru.krivenchukartem.calculatorapp.ui.lab1Screen.InfoScreen
 
 enum class MainScreen {
     Start,
@@ -81,6 +82,12 @@ fun CalculatorApp(
                         .padding(dimensionResource(R.dimen.padding_medium))
                         .fillMaxSize()
                 )
+            }
+            composable(route = MainScreen.Info.name){
+                InfoScreen(
+                    modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_medium))
+                    .fillMaxSize())
             }
         }
     }
