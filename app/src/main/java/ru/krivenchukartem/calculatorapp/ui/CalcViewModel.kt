@@ -1,5 +1,6 @@
 package ru.krivenchukartem.calculatorapp.ui
 
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.update
 import ru.krivenchukartem.calculatorapp.R
 import ru.krivenchukartem.calculatorapp.data.CalcUiState
 import ru.krivenchukartem.calculatorapp.data.DEFAULT_CURRENT_NUMBER
+import ru.krivenchukartem.calculatorapp.data.DataSource
 import ru.krivenchukartem.calculatorapp.data.HistoryRepresentation
 
 private val TAG = "CalcViewModel"
@@ -19,10 +21,39 @@ class CalcViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CalcUiState())
     val uiState: StateFlow<CalcUiState> = _uiState.asStateFlow()
 
-    fun updateCurrentSlider(newValue: String){
-        _uiState.update { currentState ->
-            currentState.copy(currentBase = newValue)
+    private fun calcMinNumberSystem(): String{
+        var maxValue = 0
+        val sequence = _uiState.value.currentNumber
+        sequence.forEach { symbol ->
+            val digit = DataSource.stringToDigit[symbol.toString()] ?: 0
+            if (digit > maxValue){
+                maxValue = digit
+            }
         }
+        return (maxValue + 1).toString()
+    }
+
+    fun updateCurrentSlider(newValue: String){
+
+        val minNumberSystem = calcMinNumberSystem().toIntOrNull() ?: 0
+        val currentNumberSystem = newValue.toIntOrNull() ?: 0
+
+        Log.d(TAG, "minNumberSystem: \t$minNumberSystem")
+        Log.d(TAG, "currentNumberSystem: \t$currentNumberSystem")
+        Log.d(TAG, "newValue: \t$newValue")
+
+
+        if (minNumberSystem <= currentNumberSystem){
+            _uiState.update { currentState ->
+                currentState.copy(currentBase = newValue)
+            }
+        }
+        else{
+            _uiState.update { currentState ->
+                currentState.copy(currentBase = minNumberSystem.toString())
+            }
+        }
+
         updateResult()
     }
 
@@ -35,24 +66,9 @@ class CalcViewModel : ViewModel() {
 
     fun updateExpressionBar(newValue: String){
         /*TODO: Исправить преобразование в большую СС*/
-        val codeValue: Int
-        val offset: Int
-        val newBase: Int
-        if (newValue in "A".."F"){
-            codeValue = newValue[0].code - "7"[0].code
-            offset = "7"[0].code
-        }
-        else{
-            codeValue = newValue[0].code - "0"[0].code
-            offset = "0"[0].code
-        }
-        val currentBase = _uiState.value.currentBase.toInt()
 
-        newBase = codeValue + offset + 1
-        if (codeValue >= currentBase){
-            updateCurrentSlider(newBase.toChar().toString())
-        }
 
+        // Проверка: есть ли уже в числе точка
         if (newValue == "."){
             if (!_uiState.value.isFloat){
                 _uiState.update { currentState ->
@@ -61,6 +77,7 @@ class CalcViewModel : ViewModel() {
                 }
             }
         }
+        // Проверка: Один ли ноль в начале
         else if (_uiState.value.currentNumber == "0") {
             if (newValue == "0"){
                 return
@@ -71,11 +88,24 @@ class CalcViewModel : ViewModel() {
                 }
             }
         }
+        // Все остальное
         else {
             _uiState.update { currentState ->
                 currentState.copy(currentNumber = _uiState.value.currentNumber + newValue)
             }
         }
+
+        if (newValue in "0".."9" || newValue in "A".."F"){
+            val minNumberSystem = calcMinNumberSystem().toIntOrNull() ?: 0
+            val currentNumberSystem = _uiState.value.currentBase.toIntOrNull() ?: 0
+
+            if (currentNumberSystem < minNumberSystem){
+                _uiState.update{ currentState ->
+                    currentState.copy(currentBase = minNumberSystem.toString())
+                }
+            }
+        }
+
         updateResult()
     }
 

@@ -1,10 +1,15 @@
 package ru.krivenchukartem.calculatorapp.ui.lab1Screen
 
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,21 +25,18 @@ fun InfoScreen(
     modifier: Modifier = Modifier,
 ){
     val infoList = listOf(
+        R.string.about_app_4,
         R.string.about_app_1,
         R.string.about_app_2,
         R.string.about_app_3
     )
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.SpaceBetween
-            ){
-
-        CardText(stringResource(R.string.about_app_4, stringResource(R.string.equal)))
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
+        ){
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         ) {
-            infoList.forEach {
+            items(infoList){
                 CardText(stringResource(it))
             }
         }
