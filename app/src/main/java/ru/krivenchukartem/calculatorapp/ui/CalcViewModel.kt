@@ -15,6 +15,7 @@ import ru.krivenchukartem.calculatorapp.data.DEFAULT_CURRENT_NUMBER
 import ru.krivenchukartem.calculatorapp.data.DataSource
 import ru.krivenchukartem.calculatorapp.data.HistoryRepresentation
 import ru.krivenchukartem.calculatorapp.data.NUMBER_OF_DECIMAL_PLACES
+import ru.krivenchukartem.calculatorapp.data.NUMBER_OF_DIGITS_IN_EXPRESSION
 import ru.krivenchukartem.calculatorapp.logic.Convert_10_p1
 import ru.krivenchukartem.calculatorapp.logic.Convert_p1_10
 
@@ -64,6 +65,9 @@ class CalcViewModel : ViewModel() {
     }
 
     fun updateExpressionBar(newValue: String){
+        if (_uiState.value.currentNumber.length >= NUMBER_OF_DIGITS_IN_EXPRESSION){
+            return
+        }
          // Проверка: есть ли уже в числе точка
         if (newValue == "."){
             if (!_uiState.value.isFloat){

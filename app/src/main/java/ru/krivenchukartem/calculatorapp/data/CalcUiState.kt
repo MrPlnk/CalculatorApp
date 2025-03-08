@@ -2,6 +2,7 @@ package ru.krivenchukartem.calculatorapp.data
 
 val DEFAULT_CURRENT_NUMBER = "0"
 val NUMBER_OF_DECIMAL_PLACES: Int = 6
+val NUMBER_OF_DIGITS_IN_EXPRESSION: Int = 7
 
 data class CalcUiState(
     val currentNumber: String = DEFAULT_CURRENT_NUMBER,

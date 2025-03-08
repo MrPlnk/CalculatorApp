@@ -105,4 +105,15 @@ class Convert_10_p1_UnitTest {
 
         assertEquals(expectedNumber, result)
     }
+
+    @Test
+    fun solve_toManyDigits() {
+        val originalNumber = 1111111.0
+        val expectedNumber = "1111111"
+        val numberSystem = 10
+        val exactness = 6
+        val result = Convert_10_p1.solve(originalNumber, numberSystem, exactness)
+
+        assertEquals(expectedNumber, result)
+    }
 }
