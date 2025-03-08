@@ -14,6 +14,9 @@ import ru.krivenchukartem.calculatorapp.data.CalcUiState
 import ru.krivenchukartem.calculatorapp.data.DEFAULT_CURRENT_NUMBER
 import ru.krivenchukartem.calculatorapp.data.DataSource
 import ru.krivenchukartem.calculatorapp.data.HistoryRepresentation
+import ru.krivenchukartem.calculatorapp.data.NUMBER_OF_DECIMAL_PLACES
+import ru.krivenchukartem.calculatorapp.logic.Convert_10_p1
+import ru.krivenchukartem.calculatorapp.logic.Convert_p1_10
 
 private val TAG = "CalcViewModel"
 
@@ -38,11 +41,6 @@ class CalcViewModel : ViewModel() {
         val minNumberSystem = calcMinNumberSystem().toIntOrNull() ?: 0
         val currentNumberSystem = newValue.toIntOrNull() ?: 0
 
-        Log.d(TAG, "minNumberSystem: \t$minNumberSystem")
-        Log.d(TAG, "currentNumberSystem: \t$currentNumberSystem")
-        Log.d(TAG, "newValue: \t$newValue")
-
-
         if (minNumberSystem <= currentNumberSystem){
             _uiState.update { currentState ->
                 currentState.copy(currentBase = newValue)
@@ -62,13 +60,11 @@ class CalcViewModel : ViewModel() {
             currentState.copy(newBase = newValue)
         }
         updateResult()
+        Log.d(TAG, "UpdateNewSlider:\t $newValue")
     }
 
     fun updateExpressionBar(newValue: String){
-        /*TODO: Исправить преобразование в большую СС*/
-
-
-        // Проверка: есть ли уже в числе точка
+         // Проверка: есть ли уже в числе точка
         if (newValue == "."){
             if (!_uiState.value.isFloat){
                 _uiState.update { currentState ->
@@ -109,20 +105,43 @@ class CalcViewModel : ViewModel() {
         updateResult()
     }
 
-    fun updateResult(){
-        /*TODO: сделать вычисление результата*/
+    private fun updateResult(){
+        var intermediateResult: Double
+        var result: String
+        if (_uiState.value.currentBase.toInt() != 10){
+            intermediateResult = Convert_p1_10.solve(_uiState.value.currentNumber, _uiState.value.currentBase.toInt())
+            result = Convert_10_p1.solve(intermediateResult, _uiState.value.newBase.toInt(), NUMBER_OF_DECIMAL_PLACES)
+        }
+        else{
+            result = Convert_10_p1.solve(_uiState.value.currentNumber.toDouble(), _uiState.value.newBase.toInt(), NUMBER_OF_DECIMAL_PLACES)
+        }
+        _uiState.update{ currentState ->
+            currentState.copy(resultNumber = result)
+        }
     }
 
     fun clearExpressionBar(){
         _uiState.update { currentState ->
             currentState.copy(currentNumber = DEFAULT_CURRENT_NUMBER,
+                resultNumber = DEFAULT_CURRENT_NUMBER,
                 isFloat = false)
         }
     }
 
     fun backSpace(){
+//        Log.d(TAG, "Enter to BackSpace")
         val expression: String = _uiState.value.currentNumber
-        if (expression.length == 0){
+        if (expression == DEFAULT_CURRENT_NUMBER){
+//            Log.d(TAG, expression)
+            return
+        }
+
+        if (expression.length == 1){
+            _uiState.update{ currentState ->
+                currentState.copy(currentNumber = DEFAULT_CURRENT_NUMBER,
+                    resultNumber = DEFAULT_CURRENT_NUMBER)
+            }
+//            Log.d(TAG, _uiState.value.toString())
             return
         }
 
@@ -139,6 +158,8 @@ class CalcViewModel : ViewModel() {
                 currentState.copy(currentNumber = expression.dropLast(1))
             }
         }
+        updateResult()
+        Log.d(TAG, "leaved From Backspace\n")
     }
 
     fun updateHistory(){

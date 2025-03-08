@@ -6,7 +6,7 @@ public class Convert_10_p1 {
     public static String solve(double n, int p, int c){
         boolean isNegative = Math.abs(n) != n;
         if (isNegative) n = Math.abs(n);
-        int int_part = (int) Math.round(n);
+        int int_part = (int) Math.floor(n);
         double double_part = n - int_part;
 
         String converted_number = format(intToP(int_part, p), fltToP(double_part, p, c));
@@ -19,19 +19,11 @@ public class Convert_10_p1 {
     }
 
     private static String format(String wholePart, String fractionPart){
-        boolean isFractionPartEqualZero = true;
-        for (int i = 0; i < fractionPart.length(); i++){
-            if (fractionPart.charAt(i) != '0'){
-                isFractionPartEqualZero = false;
-                break;
-            }
-        }
-        if (isFractionPartEqualZero){
+        fractionPart = fractionPart.replaceAll("0+$", "");
+        if (fractionPart.isEmpty()) {
             return wholePart;
         }
-        else{
-            return String.join(".", wholePart, fractionPart);
-        }
+        return wholePart + "." + fractionPart;
     }
 
     private static String intToString(int n){

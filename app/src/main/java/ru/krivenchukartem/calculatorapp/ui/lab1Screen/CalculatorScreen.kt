@@ -93,7 +93,7 @@ fun CalculatorScreen(
                     value = calcUiState.newBase.toFloatOrNull() ?: 2f,
                     onValueChange = onChangeNewSlider,
                     valueRange = 2f..16f,
-                    steps = 14,
+                    steps = 13,
                 )
             }
         }
