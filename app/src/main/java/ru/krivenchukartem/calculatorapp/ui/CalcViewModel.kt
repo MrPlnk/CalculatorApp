@@ -114,6 +114,7 @@ class CalcViewModel : ViewModel() {
         }
         else{
             result = Convert_10_p1.solve(_uiState.value.currentNumber.toDouble(), _uiState.value.newBase.toInt(), NUMBER_OF_DECIMAL_PLACES)
+            Log.d(TAG, "updateResult\t $result")
         }
         _uiState.update{ currentState ->
             currentState.copy(resultNumber = result)

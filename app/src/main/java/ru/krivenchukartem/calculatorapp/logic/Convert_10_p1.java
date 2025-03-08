@@ -21,6 +21,9 @@ public class Convert_10_p1 {
     private static String format(String wholePart, String fractionPart){
         fractionPart = fractionPart.replaceAll("0+$", "");
         if (fractionPart.isEmpty()) {
+            if (wholePart.isEmpty()){
+                return "0";
+            }
             return wholePart;
         }
         return wholePart + "." + fractionPart;
