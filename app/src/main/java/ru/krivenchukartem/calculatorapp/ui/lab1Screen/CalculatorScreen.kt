@@ -17,10 +17,13 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -150,7 +153,10 @@ fun CalculatorScreen(
                 Row {
                     IconButton(
                         onClick = onHistoryButtonClicked,
-
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onTertiary,
+                            contentColor = MaterialTheme.colorScheme.tertiary
+                        )
                         ) {
                         Icon(
                             Icons.Filled.Menu,
@@ -158,20 +164,31 @@ fun CalculatorScreen(
                         )
                     }
                     IconButton(
-                        onClick = onInfoButtonClicked
+                        onClick = onInfoButtonClicked,
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onTertiary,
+                            contentColor = MaterialTheme.colorScheme.tertiary
+                        )
                     ) {
                         Icon(
                             Icons.Filled.Info,
-                            contentDescription = stringResource(R.string.backspace)
+                            contentDescription = stringResource(R.string.info),
+
                         )
                     }
                 }
                 IconButton(
                     onClick = onBackSpaceButtonClicked,
-                ){ Icon(
-                    Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                    contentDescription = stringResource(R.string.backspace)
-                ) }
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onTertiary,
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    )
+                ){
+                    Icon(
+                        Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                        contentDescription = stringResource(R.string.backspace)
+                    )
+                }
             }
             HorizontalDivider(modifier = Modifier.fillMaxWidth(),
                 thickness = dimensionResource(R.dimen.thick_devider)
@@ -202,7 +219,11 @@ fun CalculatorScreen(
                         shape = CircleShape,
                         modifier = Modifier
                             .size(56.dp)
-                            .aspectRatio(1f)
+                            .aspectRatio(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = MaterialTheme.colorScheme.onSecondary,
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
                 item {
@@ -213,7 +234,11 @@ fun CalculatorScreen(
                         shape = CircleShape,
                         modifier = Modifier
                             .size(56.dp)
-                            .aspectRatio(1f)
+                            .aspectRatio(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = MaterialTheme.colorScheme.onSecondary,
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
                 item {
@@ -224,7 +249,11 @@ fun CalculatorScreen(
                         shape = CircleShape,
                         modifier = Modifier
                             .size(56.dp)
-                            .aspectRatio(1f)
+                            .aspectRatio(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = MaterialTheme.colorScheme.onSecondary,
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
 
@@ -240,17 +269,15 @@ fun FormatedButton(
     contentPadding: PaddingValues,
     shape: Shape,
     modifier: Modifier = Modifier,
+    colors: ButtonColors = ButtonDefaults.buttonColors()
 ) {
     Button(
         modifier = modifier,
         onClick = onClick,
         contentPadding = contentPadding,
-        shape = shape, // Используем переданную форму
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Blue, // Цвет кнопки
-            contentColor = Color.White // Цвет текста
-        ),
-        elevation = ButtonDefaults.buttonElevation(8.dp) // Добавляем тень
+        shape = shape,
+        elevation = ButtonDefaults.buttonElevation(8.dp),
+        colors = colors,
     ) {
         Text(text, fontSize = 18.sp)
     }
