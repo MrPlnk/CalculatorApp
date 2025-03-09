@@ -1,9 +1,14 @@
 package ru.krivenchukartem.calculatorapp
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -15,22 +20,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.krivenchukartem.calculatorapp.ui.CalcViewModel
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.CalculatorScreen
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.HistoryScreen
 import ru.krivenchukartem.calculatorapp.ui.lab1Screen.InfoScreen
 
-enum class MainScreen {
-    Start,
-    History,
-    Info,
+enum class MainScreen(@StringRes val title: Int) {
+    Start(title = R.string.topAppBar_calculator),
+    History(title = R.string.history),
+    Info(title = R.string.info),
 }
 
 @Composable
@@ -38,8 +45,18 @@ fun CalculatorApp(
     viewModel: CalcViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ){
+
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = MainScreen.valueOf(
+        backStackEntry?.destination?.route ?: MainScreen.Start.name
+    )
+
     Scaffold(
-        topBar = { CalculatorAppBar() },
+        topBar = { CalculatorAppBar(
+            currentScreen = currentScreen,
+            canNavigateBack = navController.previousBackStackEntry != null,
+            navigateUp = { navController.navigateUp() }
+        ) },
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
@@ -98,14 +115,31 @@ fun CalculatorApp(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalculatorAppBar(){
+fun CalculatorAppBar(
+    currentScreen: MainScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit = {},
+    modifier: Modifier = Modifier
+){
     TopAppBar(
         title = {
-            Text(stringResource(R.string.topAppBar_calculator))
+            Text(stringResource(currentScreen.title))
+        },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack){
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onTertiaryContainer
-        )
+        ),
+
     )
 }
